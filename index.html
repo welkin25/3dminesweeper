@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Three.js Floating Blocks</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+      #stat {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        font-family: monospace;
+      }
+      #crosshair {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 24px;
+        pointer-events: none;
+        user-select: none;
+      }
+      #loseScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+        color: red;
+        font-size: 64px;
+        font-family: monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 10;
+        display: none; /* hide by default */
+      }
+      #winScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+        color: green;
+        font-size: 64px;
+        font-family: monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 10;
+        display: none; /* hide by default */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stat"><span id="numMinesLeft"></span> mines left</div>
+    <div id="crosshair">+</div>
+    <div id="loseScreen">YOU LOSE</div>
+    <div id="winScreen">YOU WIN</div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
