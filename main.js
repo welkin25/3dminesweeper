@@ -11,7 +11,7 @@ function loadFont() {
   return new Promise((resolve, reject) => {
     const loader = new FontLoader();
     loader.load(
-      "/fonts/helvetiker_regular.typeface.json",
+      "./fonts/helvetiker_regular.typeface.json",
       (font) => {
         loadedFont = font;
         resolve(font);
@@ -78,7 +78,7 @@ scene.add(spotlight);
 // scene.add(new THREE.GridHelper(20, 20));
 
 const loader = new THREE.TextureLoader();
-const caustics = loader.load("caustics.jpg");
+const caustics = loader.load("./caustics.jpg");
 
 caustics.wrapS = caustics.wrapT = THREE.RepeatWrapping;
 caustics.repeat.set(2, 2);
