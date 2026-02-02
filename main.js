@@ -93,7 +93,7 @@ const causticsMat = new THREE.MeshBasicMaterial({
 
 const causticsPlane = new THREE.Mesh(
   new THREE.PlaneGeometry(200, 200),
-  causticsMat
+  causticsMat,
 );
 
 causticsPlane.position.y = -50;
@@ -147,7 +147,7 @@ const coords = [];
 for (let x = 0; x < GRID_SIZE; x++) {
   for (let y = 0; y < GRID_SIZE; y++) {
     for (let z = 0; z < GRID_SIZE; z++) {
-        coords.push([x, y, z]);
+      coords.push([x, y, z]);
     }
   }
 }
@@ -238,10 +238,9 @@ function reveal({ x, y, z }) {
   }
 
   const oldBlock = mineMap[x][y][z].block;
-    oldBlock.userData.revealed = true;
+  oldBlock.userData.revealed = true;
 
   if (mineMap[x][y][z].surround !== 0) {
-
     const edges = new EdgesGeometry(oldBlock.geometry);
     const line = new LineSegments(
       edges,
@@ -372,12 +371,7 @@ for (let x = 0; x < GRID_SIZE; x++) {
   for (let y = 0; y < GRID_SIZE; y++) {
     for (let z = 0; z < GRID_SIZE; z++) {
       const cube = new THREE.Mesh(cubeGeo, cubeMat);
-      cube.position.set(
-        x,
-        y,
-        z,
-      );
-      //   console.log(cube.position, mineMap[x][y][z].surround);
+      cube.position.set(x, y, z);
       cube.userData.gridPos = { x, y, z };
       cube.userData.revealed = false;
       cube.userData.flagged = false;
@@ -390,7 +384,7 @@ for (let x = 0; x < GRID_SIZE; x++) {
 
 // ---------------- Raycaster (click remove) ----------------
 const raycaster = new THREE.Raycaster();
-raycaster.far = 6;
+raycaster.far = 15;
 
 document.addEventListener("mousedown", (event) => {
   if (!controls.isLocked) return;
@@ -408,7 +402,7 @@ document.addEventListener("mousedown", (event) => {
         const texture = makeTextTexture("🚩");
         block.material = new THREE.MeshStandardMaterial({
           map: texture,
-        //   transparent: true,
+          //   transparent: true,
         });
         block.userData.flagged = true;
         numMines--;
@@ -425,57 +419,15 @@ document.addEventListener("mousedown", (event) => {
   }
 });
 
-// ---------------- Collision ----------------
-const PLAYER_RADIUS = 0.3;
-const PLAYER_HEIGHT = 1.6;
-
-function collides(position) {
-  return false;
-  //   for (const block of blocks) {
-  //     if (block.userData.revealed) {
-  //       continue;
-  //     }
-  //     const bx = block.position.x;
-  //     const by = block.position.y;
-  //     const bz = block.position.z;
-
-  //     // Block AABB
-  //     const minX = bx - 0.5 - PLAYER_RADIUS;
-  //     const maxX = bx + 0.5 + PLAYER_RADIUS;
-  //     const minZ = bz - 0.5 - PLAYER_RADIUS;
-  //     const maxZ = bz + 0.5 + PLAYER_RADIUS;
-
-  //     const minY = by - 0.5;
-  //     const maxY = by + 0.5 + PLAYER_HEIGHT;
-
-  //     if (
-  //       position.x > minX &&
-  //       position.x < maxX &&
-  //       position.z > minZ &&
-  //       position.z < maxZ &&
-  //       position.y > minY &&
-  //       position.y < maxY
-  //     ) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-}
-
 // ---------------- Animation loop ----------------
 const clock = new THREE.Clock();
 const velocity = new THREE.Vector3();
 
 function updateSpotlight() {
-    // Position it 1 unit behind camera
-    const behind = new THREE.Vector3(0, 0, 1); // +Z is behind camera in camera space
-    behind.applyQuaternion(camera.quaternion); // rotate into camera orientation
-    spotlight.position.copy(camera.position).add(behind);
-
-    // Point it forward
-    // const forward = new THREE.Vector3(0, 0, -1); // forward in camera space
-    // forward.applyQuaternion(camera.quaternion);
-    // spotlight.target.position.copy(camera.position.clone().add(forward));
+  // Position it 1 unit behind camera
+  const behind = new THREE.Vector3(0, 0, 1); // +Z is behind camera in camera space
+  behind.applyQuaternion(camera.quaternion); // rotate into camera orientation
+  spotlight.position.copy(camera.position).add(behind);
 }
 
 function animate(time) {
@@ -500,24 +452,18 @@ function animate(time) {
     // X movement
     const nextX = camera.position.clone();
     nextX.x += move.x;
-    if (!collides(nextX)) camera.position.x = nextX.x;
+    camera.position.x = nextX.x;
 
     // Y movement
     const nextY = camera.position.clone();
     nextY.y += move.y;
-    if (!collides(nextY)) camera.position.y = nextY.y;
+    camera.position.y = nextY.y;
 
     // Z movement
     const nextZ = camera.position.clone();
     nextZ.z += move.z;
-    if (!collides(nextZ)) camera.position.z = nextZ.z;
+    camera.position.z = nextZ.z;
   }
-
-//   console.log("camera", camera.position);
-const pos = new THREE.Vector3();
-spotlight.getWorldPosition(pos);
-// console.log("spotlight world position:", pos);
-// console.log("spotlight target:", spotlight.target.position);
 
   for (let x = 0; x < GRID_SIZE; x++) {
     for (let y = 0; y < GRID_SIZE; y++) {
@@ -529,7 +475,8 @@ spotlight.getWorldPosition(pos);
           continue;
         }
         mineMap[x][y][z].block.lookAt(camera.position);
-        mineMap[x][y][z].block.position.y += Math.sin(time * 0.001 + mineMap[x][y][z].block.position.x) * 0.001;
+        mineMap[x][y][z].block.position.y +=
+          Math.sin(time * 0.001 + mineMap[x][y][z].block.position.x) * 0.001;
       }
     }
   }
@@ -538,7 +485,7 @@ spotlight.getWorldPosition(pos);
   caustics.offset.x = time * 0.00002;
   caustics.offset.y = time * 0.00003;
 
-    updateSpotlight();
+  updateSpotlight();
   renderer.render(scene, camera);
 }
 

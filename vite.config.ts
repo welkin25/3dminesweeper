@@ -2,5 +2,5 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/3dminesweeper/',
+  base: "/3dminesweeper/",
 });
